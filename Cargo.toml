@@ -1,0 +1,7 @@
+[package]
+name = "phaff"
+version = "0.0.1"
+authors = ["Nainterceptor"]
+
+[lib]
+crate-type = ["dylib"]

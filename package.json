@@ -4,7 +4,8 @@
   "description": "Phaff, Hybrid And Fast Framework",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "cargo build --release"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/Phaff/Phaff/issues"
   },
-  "homepage": "https://github.com/Phaff/Phaff#readme"
+  "homepage": "https://github.com/Phaff/Phaff#readme",
+  "dependencies": {
+    "ffi": "^2.0.0"
+  }
 }
