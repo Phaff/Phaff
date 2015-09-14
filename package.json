@@ -1,0 +1,21 @@
+{
+  "name": "phaff",
+  "version": "0.0.1",
+  "description": "Phaff, Hybrid And Fast Framework",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Phaff/Phaff.git"
+  },
+  "keywords": [
+    "framework"
+  ],
+  "author": "Nainterceptor",
+  "bugs": {
+    "url": "https://github.com/Phaff/Phaff/issues"
+  },
+  "homepage": "https://github.com/Phaff/Phaff#readme"
+}
