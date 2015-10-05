@@ -9,12 +9,18 @@ const DependencyInjection = require('./services/dependency-injection.js');
 
 class Phaff {
     constructor() {
-        //this.config = new Config();
         this.dependencyInjection = new DependencyInjection();
     }
 
     initConfig() {
-        return new Promise((resolve)=>resolve()); //this.config.readDirectory(path.join(__dirname, 'config'));
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self.dependencyInjection.getService('Phaff/Config')
+            .then(
+                (config) => config.readDirectory(path.join(__dirname, 'config'))
+            )
+            .then(resolve, reject);
+        });
     }
 
     initServices() {

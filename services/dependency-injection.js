@@ -10,7 +10,7 @@ const uniqInstanceSymbol = Symbol('uniqInstance');
 
 class DependencyInjection {
     /**@Phaff
-     * @name="phaff/dic"
+     * @name="Phaff/DIC"
      * @isSingleton
      */
     constructor() {
@@ -29,19 +29,20 @@ class DependencyInjection {
             }
             //So we want a singleton.
             if ('undefined' === typeof service[uniqInstanceSymbol]) {
-                return DependencyInjection.instantiateService(service).then((singleton) => {
+                DependencyInjection.instantiateService(service).then((singleton) => {
                     service[uniqInstanceSymbol] = singleton;
-                    return singleton;
+                    return resolve(singleton);
                 });
+                return;
             }
-            //Else, return singleton
             resolve(service[uniqInstanceSymbol]);
         });
     }
 
     static instantiateService(service) {
         return new Promise((resolve, reject) => {
-            resolve(new service());
+            var object = new service();
+            resolve(object);
         });
     }
 

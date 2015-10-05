@@ -1,11 +1,15 @@
 "use strict";
+const fs = require('fs');
+const path = require('path');
+const yamlReaderPrivate = Symbol('yamlReader');
 
 class Config {
     /**@Phaff
-     * @name="phaff/config"
+     * @name="Phaff/Config"
      * @isSingleton
      */
     constructor() {
+        this[yamlReaderPrivate] = require('js-yaml'); //@Todo make a dependency
         this.configs = {};
     }
 
@@ -34,7 +38,7 @@ class Config {
                 }
                 let doc = {};
                 try {
-                    doc = yamlReader.safeLoad(content);
+                    doc = self[yamlReaderPrivate].safeLoad(content);
                 } catch (e) {
                     console.log(e);
                 }

@@ -1,0 +1,6 @@
+services:
+    #alias
+    webserver: alias:phaff/webserver
+    config: alias:phaff/config
+    dic: alias:phaff/dic
+

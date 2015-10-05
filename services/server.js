@@ -3,7 +3,7 @@ const http = require('http');
 
 class WebServer {
     /**@Phaff
-     * @name="phaff/webserver"
+     * @name="Phaff/WebServer"
      */
     constructor() {
         this.routes = new Set();
