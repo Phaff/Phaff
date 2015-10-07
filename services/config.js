@@ -6,10 +6,11 @@ const yamlReaderPrivate = Symbol('yamlReader');
 class Config {
     /**@Phaff
      * @name="Phaff/Config"
+     * @dependencies=["Phaff/yamlReader"]
      * @isSingleton
      */
-    constructor() {
-        this[yamlReaderPrivate] = require('js-yaml'); //@Todo make a dependency
+    constructor(dependencies) {
+        this[yamlReaderPrivate] = dependencies.shift();
         this.configs = {};
     }
 
@@ -36,14 +37,14 @@ class Config {
                 if (err) {
                     return reject(err);
                 }
-                let doc = {};
-                try {
-                    doc = self[yamlReaderPrivate].safeLoad(content);
-                } catch (e) {
-                    console.log(e);
-                }
-                self.merge(doc);
-                resolve();
+                self[yamlReaderPrivate].loadYaml(content)
+                    .then(
+                        (doc) => {
+                            self.merge(doc);
+                        },
+                        (err) => console.log(err)
+                    )
+                    .then(resolve, reject);
             });
         });
     }

@@ -25,11 +25,11 @@ class DependencyInjection {
             }
             let service = self.services.get(name);
             if (!service[optionsSymbol].has('isSingleton') || false === service[optionsSymbol].get('isSingleton')) {
-                return DependencyInjection.instantiateService(service).then(resolve, reject);
+                return self.instantiateService(service).then(resolve, reject);
             }
             //So we want a singleton.
             if ('undefined' === typeof service[uniqInstanceSymbol]) {
-                DependencyInjection.instantiateService(service).then((singleton) => {
+                self.instantiateService(service).then((singleton) => {
                     service[uniqInstanceSymbol] = singleton;
                     return resolve(singleton);
                 });
@@ -39,10 +39,29 @@ class DependencyInjection {
         });
     }
 
-    static instantiateService(service) {
+    static serviceDependenciesInjector() {
+        var service = arguments[0];
+        return new (service.bind.apply(service, arguments))();
+    }
+
+
+    instantiateService(service) {
+        let self = this;
         return new Promise((resolve, reject) => {
-            var object = new service();
-            resolve(object);
+            if (service[optionsSymbol].has('dependencies')) {
+                Promise
+                    .all(
+                        service[optionsSymbol]
+                            .get('dependencies')
+                            .map((name) => self.getService(name))
+                    ).then(
+                        (dependencies) => DependencyInjection.serviceDependenciesInjector(service, dependencies) //@todo: find better way
+                    )
+                    .then(resolve, reject);
+            } else {
+                var object = new service();
+                resolve(object);
+            }
         });
     }
 
@@ -63,8 +82,6 @@ class DependencyInjection {
         });
     }
 
-
-
     registerFromString(name, serviceString) {
         if (serviceString.startsWith('alias:')) {
             //Cut alias:
@@ -82,8 +99,6 @@ class DependencyInjection {
             }
             return;
         }
-
-
 
         this.register(name, service);
     }

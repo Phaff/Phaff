@@ -13,13 +13,28 @@ class FunctionUtils {
         if (annotations === null) {
             return new Map();
         }
-        annotations = annotations.shift().match(/@(\w+)=*(".*")?/g);
+        annotations = annotations.shift().match(/@(\w+)=*(["|\[].*["|\]])?/g);
         let annotationMap = new Map();
         if (annotations.shift() === '@Phaff') {
-            annotations.forEach(function(annotation, i, array) {
-                let keyMatch = annotation.match(/@(\w+)/);
+            annotations.forEach(function(annotation) {
+                let key = annotation.match(/@(\w+)/)[1];
                 let valueMatch = annotation.match(/="?([\w\/]+)"?/);
-                annotationMap.set(keyMatch[1], valueMatch === null || valueMatch[1])
+
+                let value;
+                if (valueMatch !== null && valueMatch[1]) {
+                    value = valueMatch[1];
+                } else {
+                    let list = annotation.match(/=\[\s*([^)]+?)\s*\]/);
+                    if (list !== null) {
+                        value = list[1].split(/\s*,\s*/).map((value) => value.replace(/^\s+|"+|\s+$/g,''));
+                    }
+                }
+
+                //If no value found, assume boolean set to true.
+                if ("undefined" === typeof value ) {
+                    value = true;
+                }
+                annotationMap.set(key, value)
             });
         }
         return annotationMap;
