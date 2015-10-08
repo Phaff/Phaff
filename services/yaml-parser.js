@@ -1,13 +1,13 @@
 "use strict";
 const jsYaml = require('js-yaml');
 
-class YamlReader {
+class YamlParser {
     /**@Phaff
-     * @name="Phaff/yamlReader"
+     * @name="Phaff/YamlParser"
      */
 
     loadYaml(input, options) {
         return new Promise((resolve, reject) => resolve(jsYaml.safeLoad(input, options)));
     }
 }
-var exports = module.exports = YamlReader;
+var exports = module.exports = YamlParser;

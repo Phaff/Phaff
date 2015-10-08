@@ -6,7 +6,7 @@ const yamlReaderPrivate = Symbol('yamlReader');
 class Config {
     /**@Phaff
      * @name="Phaff/Config"
-     * @dependencies=["Phaff/yamlReader"]
+     * @dependencies=["Phaff/YamlParser"]
      * @isSingleton
      */
     constructor(dependencies) {
@@ -19,7 +19,8 @@ class Config {
         return new Promise((resolve, reject) => {
             fs.readdir(dirPath, function(err, files) {
                 if (err) {
-                    throw err;
+                    reject(err);
+                    return;
                 }
                 var promises = [];
                 files.forEach(function(file) {
@@ -53,7 +54,13 @@ class Config {
         Config.mergeObjects(this.configs, objectToMerge);
     }
 
-    get() {
+    get(selector) {
+        if ("undefined" === typeof selector) {
+            return this.configs;
+        }
+
+        var arr = selector.split(".");
+        while(arr.length && (this.configs = this.configs[arr.shift()]));
         return this.configs;
     }
 

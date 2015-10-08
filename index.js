@@ -19,6 +19,12 @@ class Phaff {
             .then(
                 (config) => config.readDirectory(path.join(__dirname, 'config'))
             )
+            .then(
+                () => self.dependencyInjection.getService('Phaff/Config')
+            )
+            .then(
+                (config) => self.dependencyInjection.mapAlias(config.get('service_aliases'))
+            )
             .then(resolve, reject);
         });
     }

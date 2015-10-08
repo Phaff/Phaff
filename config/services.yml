@@ -1,6 +1,4 @@
-services:
-    #alias
-    webserver: alias:phaff/webserver
-    config: alias:phaff/config
-    dic: alias:phaff/dic
-
+service_aliases:
+    TwigParser: "Phaff/TwigParser"
+    YamlParser: "Phaff/YamlParser"
+    Parser: "TwigParser"

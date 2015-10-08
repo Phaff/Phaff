@@ -39,6 +39,17 @@ class DependencyInjection {
         });
     }
 
+    getClass(name) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            if (!self.services.has(name)) {
+                return reject(`Service "${name}" not exists.`);
+            }
+            let service = self.services.get(name);
+            resolve(service);
+        });
+    }
+
     static serviceDependenciesInjector() {
         var service = arguments[0];
         return new (service.bind.apply(service, arguments))();
@@ -82,27 +93,20 @@ class DependencyInjection {
         });
     }
 
-    registerFromString(name, serviceString) {
-        if (serviceString.startsWith('alias:')) {
-            //Cut alias:
-            serviceString = serviceString.substring(6);
-            this.register(name, this.getService(serviceString));
-            return;
+    mapAlias(services) {
+    let self = this;
+    let chainedPromise = new Promise((resolve) => resolve());
+    Object.keys(services).forEach((key) => {
+        if (services.hasOwnProperty(key)) {
+            chainedPromise = chainedPromise
+                .then(() => self.getClass(services[key]))
+                .then((service) => self.register(key, service));
         }
+    });
+    return chainedPromise;
+}
 
-        if (serviceString.startsWith('@')) {
-            let object;
-            try {
-                object = require(serviceString.substring(1));
-            } catch (e) {
-                console.log(`Service ${name} <-> ${serviceString}`);
-            }
-            return;
-        }
-
-        this.register(name, service);
-    }
-
+    //
     registerFile(path) {
         var service = require(path);
         service[optionsSymbol] = FunctionUtils.getPhaffAnnotations(service);
@@ -112,8 +116,6 @@ class DependencyInjection {
         }
         this.register(name, service);
     }
-
-
 
     register(name, service) {
         this.services.set(name, service);
