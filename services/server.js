@@ -4,11 +4,14 @@ const http = require('http');
 class WebServer {
     /**@Phaff
      * @name="Phaff/WebServer"
+     * @dependencies=["TwigParser"]
      */
-    constructor() {
+    constructor(dependencies) {
+        let twigParser = dependencies.shift();
         this.routes = new Set();
         let self = this;
         this.server = http.createServer((request, response) => {
+            response.render = twigParser.render;
             //The router
             //@Todo : Find a way to split this in a method of PhaffServer
             var rails = {
